@@ -5,4 +5,6 @@ int main(void) {
     char w = 'a';
     short res = (int)w * i;
     printf("%hd", res);
+    
+// Комментарий это машина комментарий от бога ераслан ия бин биг
 }
