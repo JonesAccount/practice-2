@@ -1,0 +1,36 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+typedef unsigned long long int lint;
+typedef unsigned short int usint;
+
+int main(void) {
+    printf("\033[?25l");
+    
+    lint number = 0; lint *pN = &number;
+    usint multipliers[100] = {0};
+    usint divider = 2, indexArray = 0;
+    
+    while (1) {
+        printf("Число для разложения: ");
+        
+        scanf("%llu", pN);
+        lint divisionResult = *pN;
+        
+        while (divisionResult != 1) {
+            if ((divisionResult % divider) == 0) {
+                multipliers[indexArray] = divider;
+                divisionResult /= divider;
+                indexArray++;
+            } else { divider++; }
+        }
+        
+        printf("\n");
+        for (int i = 0; i < 100; i++) { if (multipliers[i] != 0) { printf("%hu%s", multipliers[i], (multipliers[i + 1] != 0) ? " * " : ""); } }
+        printf(" = %llu", *pN);
+        
+        getchar(); getchar(); system("clear");
+    }
+    
+    return 0;
+}
