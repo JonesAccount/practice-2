@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <termios.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef unsigned short int usint;
+
+char getch(void) {
+    struct termios oldt, newt;
+    char ch;
+    tcgetattr(STDIN_FILENO, &oldt);       
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);    
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); 
+    return ch;
+}
+
+int main(void) {
+    printf("\033[?25l");
+    srand(time(NULL));
+    
+    usint number = 0, check = 0;
+    char choice = '1';
+    
+    while (1) {
+        number = rand() % 14 + 2;
+        check = 0;
+        
+        printf("число: %hu\n\nтвой ответ:\n[1] простое\n[2] составное", number);
+        choice = getch();
+        
+        for (int i = 1; i <= number; i++) { if ((number % i) == 0) { check++; } }
+        
+        system("clear");
+        if (choice == '1' && check == 2) {
+            printf("\n\033[32m\n\n\tПравильно!\033[0m");
+        } else if (choice == '2' && check > 2) {
+            printf("\n\033[32m\n\n\tПравильно!\033[0m");
+        } else {
+            printf("\n\033[31m\n\n\tНеправильно!\033[0m");
+        }
+        
+        printf("\n");
+        sleep(1); system("clear");
+    }
+    
+    return 0;
+}
