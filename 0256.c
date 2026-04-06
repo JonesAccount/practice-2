@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 
-void sort(int *arr, int flag);
+void sort_array(int *arr, int size, int ascending);
 
 int main(void) {
 	printf("\033[?25l");
@@ -23,7 +23,7 @@ int main(void) {
 	}
 
 	// сортировочная функция
-	sort(numbers, 0); // принимает два аргумента: 1. массив 2. если единица то возрастанию, если 0 по убыванию
+	sort_array(numbers, 10, 0); // принимает два аргумента: 1. массив 2. если единица то возрастанию, если 0 по убыванию
 
 	// показ массива отсортированного по убыванию
 	printf("\n\nПо убыванию:\n");
@@ -31,7 +31,7 @@ int main(void) {
 		printf("%d ", numbers[i]);
 	}
 
-	sort(numbers, 1);
+	sort_array(numbers, 10, 1);
 
 	// показ массива отсортированного по возрастанию
 	printf("\n\nПо возрастванию:\n");
@@ -44,10 +44,10 @@ int main(void) {
 	return 0;
 }
 
-void sort(int *arr, int flag) {
-	for (int i = 0; i < 9; i++) {
-		for (int j = i + 1; j < 10; j++) {
-			if ((flag && arr[j] < arr[i]) || (!flag && arr[j] > arr[i])) {
+void sort_array(int *arr, int size, int ascending) {
+	for (int i = 0; i < size - 1; i++) {
+		for (int j = i + 1; j < size; j++) {
+			if ((ascending && arr[j] < arr[i]) || (!ascending && arr[j] > arr[i])) {
 				int temp = arr[i];
 				arr[i] = arr[j];
 			 	arr[j] = temp;
