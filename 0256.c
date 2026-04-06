@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 
-void sort_array(int *arr, int size, int ascending);
+void sort_array(int *arr, size_t size, int ascending);
 
 int main(void) {
 	printf("\033[?25l");
@@ -44,10 +44,10 @@ int main(void) {
 	return 0;
 }
 
-void sort_array(int *arr, int size, int ascending) {
-	for (int i = 0; i < size - 1; i++) {
-		for (int j = i + 1; j < size; j++) {
-			if ((ascending && arr[j] < arr[i]) || (!ascending && arr[j] > arr[i])) {
+void sort_array(int *arr, size_t size, int ascending) {
+	for (size_t i = 0; i < size - 1; i++) {
+		for (size_t j = i + 1; j < size; j++) {
+			if ((arr[j] < arr[i]) == ascending) {
 				int temp = arr[i];
 				arr[i] = arr[j];
 			 	arr[j] = temp;
