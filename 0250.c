@@ -91,7 +91,7 @@ int main(void) {
 
     printf("\n\n");
     for (int i = 0; i < 26; i++) {
-        printf("%10d. %c/%c%15d. %c/%c\n", i + 1, unsort[i], tolower(unsort[i]), i + 1, sort[i], tolower(sort[i]));
+        printf("%10d. %c/%c%15d. %c/%c\n", gi + 1, unsort[i], tolower(unsort[i]), i + 1, sort[i], tolower(sort[i]));
     }
 
     getchar();
