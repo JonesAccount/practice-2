@@ -141,3 +141,60 @@ void render_mine(void) {
 
 void commands_book(void) {
     printf(BOLD GRAY_WHITE "        - СПРАВОЧНИК -        " RESET);
+printf(N BOLD "::БАЗА" RESET);
+    printf(N "[m] отправиться в шахту");
+    
+    printf(N N BOLD "::ШАХТА" RESET);
+    printf(N "[b] отправиться на базу");
+    printf(N "[c] копать уголь ");
+    
+    printf(N N BOLD "::ОБЩИЕ" RESET);
+    printf(N "[h] команды");
+    
+    for (int i = 0; i < 7; i++) {
+        printf(N "                               ");
+    }
+    
+    printf(N BOLD GRAY_WHITE "                              " RESET);
+
+    getch();
+}
+
+char getch(void) {
+    struct termios oldt, newt;
+    char ch;
+    tcgetattr(STDIN_FILENO, &oldt);       
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);    
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); 
+    return ch;
+}
+
+void clear_screen(void) {
+    fputs("\033[2J\033[H", stdout);
+    fflush(stdout);
+}
+
+void loading_screen(void) {
+    for (int i = 0; i < 3; i++) {
+        printf(BOLD GRAY_WHITE "                              " RESET);
+        
+        for (int k = 0; k < 7; k++) {
+            printf(N "                               ");
+        }
+        
+        printf("\n           загрузка" N N "\t   ");
+        for (int j = 0; j < 7; j++) {
+            printf("⛏");
+            usleep(1000000);
+            fflush(stdout);
+        }
+        clear_screen();
+        getchar();
+    }
+    
+    
+    sleep(2);
+}
