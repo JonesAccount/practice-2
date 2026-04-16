@@ -19,4 +19,3 @@ int main(int argc,char *argv[])
 
   endwin(); // завершение работы с ncurses
 }
-f
