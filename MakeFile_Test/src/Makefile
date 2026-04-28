@@ -1,5 +1,5 @@
-Program : main.o func.o
-    gcc main.o func.o -o Program
+MyProject : main.o func.o
+    gcc main.o func.o -o MyProject
 
 main.o : main.c
     gcc -c main.c -o main.o
