@@ -3,6 +3,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <stddef.h>
+#include <ctype.h>
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define LENGTH_WORD 50
 #define NLINE "\n"
@@ -10,14 +11,14 @@
 #define GRAY "\033[90m"
 #define RESET "\033[0m"
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef struct {
-	char word[LENGTH_WORD];
-} St;
+char *dictionary_list;
+size_t how_many_word_in_dictionary = 1;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static int init_dictionary(void);
 static void menu_page(void);
-static void add_word(St *dictionary);
+static void add_word(void);
 static int choice_action(void);
-static void show_words(St *dictionary, size_t size);
+static void show_words(void);
 static char getch(void);
 static void clear_screen(void);
 static void waiting(void);
@@ -25,36 +26,20 @@ static void waiting(void);
 int main(int argc, char *argv[]) {
 	printf("\033[?25l");
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	St *dictionary = (St *)malloc(sizeof(St));
-	if (NULL == dictionary) { printf("error creating dinameccaly array"); return 1; }
+	dictionary_list = malloc(0);
+	if (NULL == dictionary_list) { printf("error creating dinameccaly array"); return 1; }
 
-	FILE *file = fopen("dictionary.txt", "r");
-	if (NULL == file) { printf("error opening file"); return 1; }
-
-	char ch = 0;
-	char buffer[256] = {0};
-	int counter = 1;
-	while ((ch = getc(file)) != EOF) {
-		St *temp = realloc(dictionary, counter * sizeof(St));
-		if (NULL == temp) { printf("error creating temp array"); free(dictionary); return 1; }
-		dictionary = temp;
-		fgets(buffer, sizeof(buffer), dictionary + counter -> word);
-		counter++;
-	}
-
-	fclose(file);
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	size_t size = 0;
+	init_dictionary();
 
 	while (1) {
 		menu_page();
-		int action = choice_action();
 
-		if (action) { clear_screen(); }
+		int action;
+		if ((action == choice_action()) == 1) { clear_screen(); }
+
 		switch (action) {
 			case 1:
-				size = sizeof(*dictionary) / sizeof(*(dictionary));
-				show_words(dictionary, size);
+				show_words();
 				waiting();
 				break;
 			case 2: printf("2"); break;
@@ -67,6 +52,33 @@ int main(int argc, char *argv[]) {
 	}
 
 	printf("\033[?25h");
+	return 0;
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static int init_dictionary(void) {
+	FILE *file = fopen("dictionary.txt", "r");
+	if (NULL == file) { printf("error opening file"); return -1; }
+
+	char ch = 0;
+	while ((ch = getc(file)) != EOF) {
+		char *temp = realloc(dictionary_list, how_many_word_in_dictionary);
+		if (NULL == temp) { printf("error creating temp array"); free(dictionary_list); return -1; }
+		dictionary_list = temp;
+
+		if (isalpha(ch)) {
+			*(dictionary_list + how_many_word_in_dictionary - 1) = ch;
+		} else {
+			*(dictionary_list + how_many_word_in_dictionary - 1) = '\n';
+			how_many_word_in_dictionary++;
+			*(dictionary_list + how_many_word_in_dictionary - 1) = '-';
+			how_many_word_in_dictionary++;
+			*(dictionary_list + how_many_word_in_dictionary - 1) = ' ';
+		}
+
+		how_many_word_in_dictionary++;
+	}
+
+	fclose(file);
 	return 0;
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -83,7 +95,7 @@ static void menu_page(void) {
 	printf(NLINE GRAY "choose the option" RESET);
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static void add_word(St *dictionary) {
+static void add_word(void) {
 //	St *temp = realloc()
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -103,10 +115,12 @@ static int choice_action(void) {
 	return 0;
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static void show_words(St *dictionary, size_t size) {
-	for (size_t i = 0; i < size; i++) {
-		printf("- %s", *(dictionary + i));
+static void show_words(void) {
+	printf("- ");
+	for (int i = 0; i < how_many_word_in_dictionary; i++) {
+		printf("%c", *(dictionary_list + i));
 	}
+
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static char getch(void) {
