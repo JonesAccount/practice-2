@@ -17,7 +17,8 @@ size_t how_many_word_in_dictionary = 1;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static int init_dictionary(void);
 static void menu_page(void);
-static void add_word(void);
+static int add_word(void);
+static int del_word(void);
 static int choice_action(void);
 static void show_words(void);
 static char getch(void);
@@ -50,7 +51,9 @@ int main(int argc, char *argv[]) {
 			case 4:
 				add_word();
 				break;
-			case 5: printf("5"); break;
+			case 5:
+				del_word();
+				break;
 		}
 
 		clear_screen();
@@ -105,7 +108,7 @@ static void menu_page(void) {
 	printf(NLINE GRAY "choose the option" RESET);
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static void add_word(void) {
+static int add_word(void) {
 	char new_word[100] = {0};
 
 	while (1) {
@@ -123,24 +126,86 @@ static void add_word(void) {
 
 		// exists or no
 		FILE *file = fopen("dictionary.txt", "r");
+		if (NULL == file) { printf("error"); return -1; }
+
 		int is_this_word_exist = 0;
 		char ch = 0;
 
 		char line[100];
-		while (fgets(line, sizeof(line), file)) {
-    		char *word_in_file = line + 2;
-      		word_in_file[strcspn(word_in_file, "\n")] = '\0';
-        	if (!strcmp(new_word, word_in_file)) { is_this_word_exist = 1; }
+
+		while (fgets(line, sizeof(line), file) != NULL) {
+			if (!strcmp(line, new_word)) { is_this_word_exist = 1; }
 		}
 
 		fclose(file);
 
-		printf("%d", is_this_word_exist);
-		getchar();
+		if (!is_this_word_exist) {
+			file = fopen("dictionary.txt", "a");
+			if (NULL == file) { printf("error"); return -1; }
+
+			*(dictionary_list + how_many_word_in_dictionary - 1) = '\n';
+			how_many_word_in_dictionary++;
+			*(dictionary_list + how_many_word_in_dictionary - 1) = '-';
+			how_many_word_in_dictionary++;
+			*(dictionary_list + how_many_word_in_dictionary - 1) = ' ';
+			how_many_word_in_dictionary++;
+
+			for (int i = 0; i < strlen(new_word); i++) {
+				putc(new_word[i], file);
+			}
+
+			fclose(file);
+		}
 
 		clear_screen();
 	}
 
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static int del_word(void) {
+	char del_word[100];
+
+	while (1) {
+		printf("delete word: ");
+		fgets(del_word, sizeof(del_word), stdin);
+
+		// find the word
+		FILE *file = fopen("dictionary.txt", "r");
+		if (NULL == file) { printf("error"); return -1; }
+
+		int is_this_word_exist = 0;
+		char ch = 0;
+		char line[100];
+
+		while (fgets(line, sizeof(line), file) != NULL) {
+			if (!strcmp(line, del_word)) { is_this_word_exist = 1; }
+		}
+
+		fclose(file);
+
+		// write code in the down
+		if (!is_this_word_exist) {
+			file = fopen("dictionary.txt", "a");
+			if (NULL == file) { printf("error"); return -1; }
+
+			*(dictionary_list + how_many_word_in_dictionary - 1) = '\n';
+			how_many_word_in_dictionary++;
+			*(dictionary_list + how_many_word_in_dictionary - 1) = '-';
+			how_many_word_in_dictionary++;
+			*(dictionary_list + how_many_word_in_dictionary - 1) = ' ';
+			how_many_word_in_dictionary++;
+
+			for (int i = 0; i < strlen(new_word); i++) {
+				putc(new_word[i], file);
+			}
+
+			fclose(file);
+		}
+
+		
+	}
+
+	return 0;
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static int choice_action(void) {
