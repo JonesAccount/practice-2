@@ -1,8 +1,9 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <termios.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <stddef.h>
+#include <string.h>
+#include <stdio.h>
 #include <ctype.h>
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define LENGTH_WORD 50
@@ -34,8 +35,10 @@ int main(int argc, char *argv[]) {
 	while (1) {
 		menu_page();
 
-		int action;
-		if ((action == choice_action()) == 1) { clear_screen(); }
+		int action = 0;
+		action = choice_action();
+
+		if (action) { clear_screen(); }
 
 		switch (action) {
 			case 1:
@@ -44,7 +47,9 @@ int main(int argc, char *argv[]) {
 				break;
 			case 2: printf("2"); break;
 			case 3: printf("3"); break;
-			case 4: printf("4"); break;
+			case 4:
+				add_word();
+				break;
 			case 5: printf("5"); break;
 		}
 
@@ -58,6 +63,11 @@ int main(int argc, char *argv[]) {
 static int init_dictionary(void) {
 	FILE *file = fopen("dictionary.txt", "r");
 	if (NULL == file) { printf("error opening file"); return -1; }
+
+	*(dictionary_list + how_many_word_in_dictionary - 1) = '-';
+	how_many_word_in_dictionary++;
+	*(dictionary_list + how_many_word_in_dictionary - 1) = ' ';
+	how_many_word_in_dictionary++;
 
 	char ch = 0;
 	while ((ch = getc(file)) != EOF) {
@@ -96,7 +106,41 @@ static void menu_page(void) {
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static void add_word(void) {
-//	St *temp = realloc()
+	char new_word[100] = {0};
+
+	while (1) {
+		printf("New word: ");
+		fgets(new_word, sizeof(new_word), stdin);
+
+		// word or no
+		int is_it_word = 1;
+		for (int i = 0; i < strlen(new_word) - 1; i++) {
+			if (!isalpha(new_word[i])) {
+				is_it_word = 0;
+				break;
+			}
+		}
+
+		// exists or no
+		FILE *file = fopen("dictionary.txt", "r");
+		int is_this_word_exist = 0;
+		char ch = 0;
+
+		char line[100];
+		while (fgets(line, sizeof(line), file)) {
+    		char *word_in_file = line + 2;
+      		word_in_file[strcspn(word_in_file, "\n")] = '\0';
+        	if (!strcmp(new_word, word_in_file)) { is_this_word_exist = 1; }
+		}
+
+		fclose(file);
+
+		printf("%d", is_this_word_exist);
+		getchar();
+
+		clear_screen();
+	}
+
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static int choice_action(void) {
@@ -116,7 +160,6 @@ static int choice_action(void) {
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static void show_words(void) {
-	printf("- ");
 	for (int i = 0; i < how_many_word_in_dictionary; i++) {
 		printf("%c", *(dictionary_list + i));
 	}
