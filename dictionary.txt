@@ -1,2 +1,3 @@
-God
-Car
+Html
+juice
+teacher

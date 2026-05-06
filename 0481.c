@@ -185,29 +185,67 @@ static int del_word(void) {
 
 		fclose(file);
 
-		printf("%d",  is_this_word_exist);
-		getchar();
-
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		// write code in the down
+		// get index and size word for delete
 		int index_first_letter_del_word = 0;
-		int size_de_word = 0;
-
+		int size_del_word = 0;
 		int similar = 0;
+		char temp[100];
+		int temp_count = 0;
 
-		if (!is_this_word_exist) {
+		if (is_this_word_exist) {
+			for (int i = 0, j = 0; i < how_many_word_in_dictionary; i++) {
+				if (dictionary_list[i] == del_word[j]) {
+					if (!j) { index_first_letter_del_word = i; }
 
-			for (int i = 0; i < how_many_word_in_dictionary; i++) {
-				if (dictionary_list[i] == del_word[0] || similar) {
-					index_first_letter_del_word = i;
+					j++;
+					size_del_word++;
+
+					temp[temp_count] = dictionary_list[i];
+					temp_count++;
+					temp[0] = toupper(temp[0]);
+
+					if (!strcmp(temp, del_word)) { break; }
+
+				} else {
+					index_first_letter_del_word = size_del_word = similar = j = temp_count = 0;
 				}
+
+			}
+			size_del_word--;
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			// create new array but without deleted word
+			char *temparary_dictinary = malloc(0);
+
+			for (int i = 0, j = 0; i < how_many_word_in_dictionary; i++) {
+				char *tmp = realloc(temparary_dictinary, i + 1);
+				if (NULL == tmp) { printf("error"); free(temparary_dictinary); return -1; }
+				temparary_dictinary = tmp;
+
+				if (i < index_first_letter_del_word || i > index_first_letter_del_word + size_del_word ) {
+					*(temparary_dictinary + j) = dictionary_list[i];
+					j++;
+				}
+
 			}
 
+			how_many_word_in_dictionary -= size_del_word;
+
+			// - god\n- tall\n- car
+			printf(":");
+			for (int u = 0; u < how_many_word_in_dictionary; u++) {
+				printf("%c", temparary_dictinary[u]);
+			}
+
+			getchar();
+
 		}
+
+
 		/*
-			1. find the word
-			2. saves index fist letetr and size
-			3. then creat temperary array
+			1. find the word - DONE
+			2. saves index fist letetr and size - DONE
+			3. then creat temperary array - DONE
 			4. write all words in tmp array
 			5. but ignor index and size what did you save
 			6. dictionary = tmp
@@ -215,7 +253,7 @@ static int del_word(void) {
 			8. write new words in the file
 		 */
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		
+
 		/*
 			1. file
 			2. init array
