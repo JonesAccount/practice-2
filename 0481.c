@@ -67,11 +67,6 @@ static int init_dictionary(void) {
 	FILE *file = fopen("dictionary.txt", "r");
 	if (NULL == file) { printf("error opening file"); return -1; }
 
-	*(dictionary_list + how_many_word_in_dictionary - 1) = '-';
-	how_many_word_in_dictionary++;
-	*(dictionary_list + how_many_word_in_dictionary - 1) = ' ';
-	how_many_word_in_dictionary++;
-
 	char ch = 0;
 	while ((ch = getc(file)) != EOF) {
 		char *temp = realloc(dictionary_list, how_many_word_in_dictionary);
@@ -82,10 +77,6 @@ static int init_dictionary(void) {
 			*(dictionary_list + how_many_word_in_dictionary - 1) = ch;
 		} else {
 			*(dictionary_list + how_many_word_in_dictionary - 1) = '\n';
-			how_many_word_in_dictionary++;
-			*(dictionary_list + how_many_word_in_dictionary - 1) = '-';
-			how_many_word_in_dictionary++;
-			*(dictionary_list + how_many_word_in_dictionary - 1) = ' ';
 		}
 
 		how_many_word_in_dictionary++;
@@ -139,19 +130,20 @@ static int add_word(void) {
 
 		fclose(file);
 
+		// add the word
 		if (!is_this_word_exist) {
 			file = fopen("dictionary.txt", "a");
 			if (NULL == file) { printf("error"); return -1; }
 
 			*(dictionary_list + how_many_word_in_dictionary - 1) = '\n';
 			how_many_word_in_dictionary++;
-			*(dictionary_list + how_many_word_in_dictionary - 1) = '-';
-			how_many_word_in_dictionary++;
-			*(dictionary_list + how_many_word_in_dictionary - 1) = ' ';
-			how_many_word_in_dictionary++;
 
 			for (int i = 0; i < strlen(new_word); i++) {
-				putc(new_word[i], file);
+				if (!i) {
+					putc(toupper(new_word[i]), file);
+				} else {
+					putc(new_word[i], file);
+				}
 			}
 
 			fclose(file);
@@ -169,7 +161,17 @@ static int del_word(void) {
 		printf("delete word: ");
 		fgets(del_word, sizeof(del_word), stdin);
 
-		// find the word
+		// change register word: GOd -> god
+		for (int i = 0; i < strlen(del_word); i++) {
+			if (!i) {
+				del_word[i] = toupper(del_word[0]);
+			} else {
+				del_word[i] = tolower(del_word[i]);
+			}
+
+		}
+
+		// check this word exist or no
 		FILE *file = fopen("dictionary.txt", "r");
 		if (NULL == file) { printf("error"); return -1; }
 
@@ -183,35 +185,45 @@ static int del_word(void) {
 
 		fclose(file);
 
+		printf("%d",  is_this_word_exist);
+		getchar();
+
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		// write code in the down
+		int index_first_letter_del_word = 0;
+		int size_de_word = 0;
+
+		int similar = 0;
+
 		if (!is_this_word_exist) {
-			file = fopen("dictionary.txt", "a");
-			if (NULL == file) { printf("error"); return -1; }
 
-			*(dictionary_list + how_many_word_in_dictionary - 1) = '\n';
-			how_many_word_in_dictionary++;
-			*(dictionary_list + how_many_word_in_dictionary - 1) = '-';
-			how_many_word_in_dictionary++;
-			*(dictionary_list + how_many_word_in_dictionary - 1) = ' ';
-			how_many_word_in_dictionary++;
-
-			for (int i = 0; i < strlen(new_word); i++) {
-				putc(new_word[i], file);
+			for (int i = 0; i < how_many_word_in_dictionary; i++) {
+				if (dictionary_list[i] == del_word[0] || similar) {
+					index_first_letter_del_word = i;
+				}
 			}
 
-			fclose(file);
 		}
-
 		/*
+			1. find the word
+			2. saves index fist letetr and size
+			3. then creat temperary array
+			4. write all words in tmp array
+			5. but ignor index and size what did you save
+			6. dictionary = tmp
+			7. clear the file
+			8. write new words in the file
+		 */
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		
+		/*
 			1. file
 			2. init array
 			3. choose word for delete
 			4. find the word in array
-			5. 
-			
+			5. delete
 		 */
-		
+
 	}
 
 	return 0;
@@ -234,8 +246,17 @@ static int choice_action(void) {
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static void show_words(void) {
+	char ch = 0;
+
 	for (int i = 0; i < how_many_word_in_dictionary; i++) {
-		printf("%c", *(dictionary_list + i));
+		ch = *(dictionary_list + i);
+
+		if ((isalpha(ch)) && (!i)) { printf("- "); }
+
+		printf("%c", ch);
+
+		if ((!isalpha(ch)) && (isalpha(*(dictionary_list + i + 1)))) { printf("- "); }
+
 	}
 
 }

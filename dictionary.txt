@@ -1,6 +1,2 @@
-apple
-tetris
-applt
-run
-money
-cat
+God
+Car
