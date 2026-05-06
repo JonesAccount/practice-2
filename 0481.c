@@ -202,6 +202,15 @@ static int del_word(void) {
 			fclose(file);
 		}
 
+		/*
+		
+			1. file
+			2. init array
+			3. choose word for delete
+			4. find the word in array
+			5. 
+			
+		 */
 		
 	}
 
