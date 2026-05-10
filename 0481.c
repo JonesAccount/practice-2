@@ -189,7 +189,6 @@ static int del_word(void) {
 		// get index and size word for delete
 		int index_first_letter_del_word = 0;
 		int size_del_word = 0;
-		int similar = 0;
 		char temp[100];
 		int temp_count = 0;
 
@@ -208,7 +207,7 @@ static int del_word(void) {
 					if (!strcmp(temp, del_word)) { break; }
 
 				} else {
-					index_first_letter_del_word = size_del_word = similar = j = temp_count = 0;
+					index_first_letter_del_word = size_del_word = j = temp_count = 0;
 				}
 
 			}
@@ -232,7 +231,7 @@ static int del_word(void) {
 			how_many_word_in_dictionary -= size_del_word;
 
 			// - god\n- tall\n- car
-			printf(":");
+
 			for (int u = 0; u < how_many_word_in_dictionary; u++) {
 				printf("%c", temparary_dictinary[u]);
 			}
