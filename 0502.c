@@ -1,39 +1,73 @@
 #include <ncurses.h>
 
+void calc_print(void);
+
 int main(int argc, char *argv[]) {
 	initscr();
 	curs_set(0);
-	
-	start_color();
-	// orange
-	init_color(10, 1000, 500, 0); init_pair(1, 10, COLOR_BLACK);
 
-	mvprintw(2, 13, "C A L C U L A T O R");
-	mvprintw(4, 4, "+ - - - - - - - - - - - - - - - - - +");
-	mvprintw(5, 4, "|"); 																											 mvprintw(5, 40, "|");
-	mvprintw(6, 4, "+ - - - - - - - - - - - - - - - - - +");
-	mvprintw(7, 4, "|"); 																			    						     mvprintw(7, 40, "|");
-	mvprintw(8, 4, "|");  mvprintw(8, 5, "  (  ");  mvprintw(8, 15, "  )  ");  mvprintw(8, 25, "  %%  "); attron(COLOR_PAIR(1)); mvprintw(8, 35, "  C  ");  attroff(COLOR_PAIR(1)); color_set(0, NULL); mvprintw(8, 40, "|");
-	mvprintw(9, 4, "|");  																										     mvprintw(9, 40, "|");
-	mvprintw(10, 4, "|"); 																			   							     mvprintw(10, 40, "|");
-	mvprintw(11, 4, "|"); mvprintw(11, 5, "  7  ");  mvprintw(11, 15, "  8  ");  mvprintw(11, 25, "  9  ");  mvprintw(11, 35, "  /  ");  mvprintw(11, 40, "|");
-	mvprintw(12, 4, "|"); 																									 	     mvprintw(12, 40, "|");
-	mvprintw(13, 4, "|");																											 mvprintw(13, 40, "|");
-	mvprintw(14, 4, "|"); mvprintw(14, 5, "  4  "); mvprintw(14, 15, "  5  "); mvprintw(14, 25, "  6  "); mvprintw(14, 35, "  *  "); mvprintw(14, 40, "|");
-	mvprintw(15, 4, "|"); 																									     	 mvprintw(15, 40, "|");
-	mvprintw(16, 4, "|");																											 mvprintw(16, 40, "|");
-	mvprintw(17, 4, "|"); mvprintw(17, 5, "  1  "); mvprintw(17, 15, "  2  "); mvprintw(17, 25, "  3  "); mvprintw(17, 35, "  -  "); mvprintw(17, 40, "|");
-	mvprintw(18, 4, "|");																			                                 mvprintw(18, 40, "|");
-	mvprintw(19, 4, "|");																							      		     mvprintw(19, 40, "|");
-	mvprintw(20, 4, "|"); mvprintw(20, 5, "  0  "); mvprintw(20, 15, "  .  "); mvprintw(20, 25, "  =  "); mvprintw(20, 35, "  +  "); mvprintw(20, 40, "|");
- 	mvprintw(21, 4, "|"); 																										     mvprintw(21, 40, "|");
-   	mvprintw(22, 4, "+ - - - - - - - - - - - - - - - - - +");
-  
+	calc_print();
 	getch();
-
-	curs_set(1); 
+	
+	curs_set(1);
 	endwin();
 	return 0;
+}
+
+void calc_print(void) {
+	// settings color
+	start_color();
+	use_default_colors();
+	init_pair(1, 10, -1);  // terminal default color 
+	init_pair(1, 202, -1); // orange
+	
+	attron(A_BOLD);
+
+	// frames - - - - - - - - - - - - - - - - - - - 
+	for (int i = 5; i <= 21; i++) {
+		if (i != 6) { mvprintw(i, 4, "|"); }
+	}
+	
+	for (int i = 7; i <= 21; i++) {
+		mvprintw(i, 40, "|");
+	}
+	
+	for (int i = 5; i <= 21; i++) {
+		if (i != 6) { mvprintw(i, 96, "|"); }
+	}
+	
+	// lines - - - - - - - - - - - - - - - - - - - 
+	for (int i = 4; i <= 97; i += 2) {
+		if (i != 4 && i != 40 && i != 96) {
+			mvprintw(4, i, "-");
+		} else {
+			mvprintw(4, i, "+");
+		}
+	}
+	
+	for (int i = 4; i <= 97; i += 2) {
+		if (i != 4 && i != 40 && i != 96) {
+			mvprintw(6, i, "-");
+		} else {
+			mvprintw(6, i, "+");
+		}
+	}
+	
+	for (int i = 4; i <= 97; i += 2) {
+		if (i != 4 && i != 40 && i != 96) {
+			mvprintw(22, i, "-");
+		} else {
+			mvprintw(22, i, "+");
+		}
+	}
+
+	mvprintw(5, 13, "C A L C U L A T O R");																																				        mvprintw(5, 40, "|");
+	attron(COLOR_PAIR(1));    mvprintw(8, 5, "  (  ");   mvprintw(8, 15, "  )  ");  mvprintw(8, 25, "  %%  "); mvprintw(8, 35, "  C  ");  attroff(COLOR_PAIR(1));
+	mvprintw(11, 5, "  7  "); mvprintw(11, 15, "  8  "); mvprintw(11, 25, "  9  "); attron(COLOR_PAIR(1));     mvprintw(11, 35, "  /  "); attroff(COLOR_PAIR(1));
+	mvprintw(14, 5, "  4  "); mvprintw(14, 15, "  5  "); mvprintw(14, 25, "  6  "); attron(COLOR_PAIR(1));     mvprintw(14, 35, "  *  "); attroff(COLOR_PAIR(1));
+	mvprintw(17, 5, "  1  "); mvprintw(17, 15, "  2  "); mvprintw(17, 25, "  3  "); attron(COLOR_PAIR(1));     mvprintw(17, 35, "  -  "); attroff(COLOR_PAIR(1));
+	mvprintw(20, 5, "  0  "); mvprintw(20, 15, "  .  "); mvprintw(20, 25, "  =  "); attron(COLOR_PAIR(1));     mvprintw(20, 35, "  +  "); attroff(COLOR_PAIR(1));
+ 	
 }
 
 // gcc 0502.c -lncurses -o app && ./app
