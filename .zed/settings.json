@@ -1,0 +1,9 @@
+{
+  "lsp": {
+    "clangd": {
+      "args": [
+        "-I/opt/homebrew/opt/raylib/include"
+      ]
+    }
+  }
+}
