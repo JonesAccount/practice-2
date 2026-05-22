@@ -10,9 +10,10 @@ int main(int argc, char *argv[]) {
 		BeginDrawing();
 		
 		ClearBackground(BLACK);
-		DrawText(".", 350, 250, 150, RED);
-		DrawText("It is me!", 190, 50, 100, DARKGRAY);
-		DrawText("code", WINDOW_X / 2 - 70, 500, 80, DARKGRAY);
+		DrawRectangle((WINDOW_X - 250) / 2, 1, 250, 250, GREEN);
+		DrawRectangle((WINDOW_X - 200) / 2, 250 + 1, 200, 200, RED);
+		DrawRectangle((WINDOW_X - 150) / 2, 250 + 200 + 1, 150, 150, BLUE);
+		DrawRectangle((WINDOW_X - 100) / 2, 250 + 200 + 150 + 1, 100, 100, YELLOW);
 		
 		EndDrawing();
 	}
