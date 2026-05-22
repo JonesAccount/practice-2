@@ -8,10 +8,10 @@
 #define WINDOW_X 700
 #define WINDOW_Y 700
 
-#define WIDTH 100
-#define HEIGHT 100
+#define WIDTH 50
+#define HEIGHT 50
 
-#define SPEED 350
+#define SPEED 60
 
 Color color = BLACK;
 
@@ -36,36 +36,28 @@ void change_color(void) {
 }
 
 int main(int argc, char *argv[]) {
-	InitWindow(WINDOW_X, WINDOW_Y, "Program");
+	InitWindow(WINDOW_X, WINDOW_Y, "IDK");
 	srand((unsigned)time(NULL));
 	
-	int x = 0;
+	float timer = 0;
+	int count = 0;
+	
 	SetTargetFPS(SPEED);
-	bool flag = true;
 	
 	while (!WindowShouldClose()) {
+		timer += GetFrameTime();
 		
-		if (x == WINDOW_X - WIDTH) {
-			flag = false;
-			change_color();
-		} else if (x == 0) {
-			flag = true;
-			change_color();
-		}
-		
-		if (flag) {
-			x++;
-		} else {
-			x--;
+		if (timer > 0.10f) {
+			count++;
+			timer = 0;
 		}
 		
 		BeginDrawing();
 		
-		ClearBackground(GRAY);
-		// frame
-		DrawRectangle(x - 5, (WINDOW_Y - 100 - 10) / 2, WIDTH + 10, HEIGHT + 10, BLACK);
-		// square
-		DrawRectangle(x, (WINDOW_Y - 100) / 2, WIDTH, HEIGHT, color);
+		for (int i = 0; i < count; i++) {
+			DrawRectangle(rand() % (WINDOW_X - WIDTH) + 1, rand() % (WINDOW_Y - HEIGHT) + 1, WIDTH, HEIGHT, color);
+			change_color();
+		}
 		
 		EndDrawing();
 	}
@@ -74,4 +66,4 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-// gcc 0506.c -o game -I/opt/homebrew/opt/raylib/include -L/opt/homebrew/opt/raylib/lib -lraylib -lm -lpthread -ldl -framework OpenGL -framework Cocoa -framework IOKit && ./game
+// gcc 0507.c -o game -I/opt/homebrew/opt/raylib/include -L/opt/homebrew/opt/raylib/lib -lraylib -lm -lpthread -ldl -framework OpenGL -framework Cocoa -framework IOKit && ./game
