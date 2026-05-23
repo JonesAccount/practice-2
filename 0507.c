@@ -18,7 +18,7 @@ Color color = BLACK;
 void change_color(void) {
 	static int index = 0;
 	index = rand() % 12 + 1;
-	
+
 	switch (index) {
 		case 1: color = RED;     break;
 		case 2: color = BLUE;    break;
@@ -31,34 +31,34 @@ void change_color(void) {
 		case 9: color = BROWN;   break;
 		case 10: color = BEIGE;   break;
 		case 11: color = SKYBLUE; break;
-		case 12: color = MAROON;  break;	
+		case 12: color = MAROON;  break;
 	}
 }
 
 int main(int argc, char *argv[]) {
 	InitWindow(WINDOW_X, WINDOW_Y, "IDK");
 	srand((unsigned)time(NULL));
-	
-	float timer = 0;
+
+	float timer = 0;q
 	int count = 0;
-	
+
 	SetTargetFPS(SPEED);
-	
+
 	while (!WindowShouldClose()) {
 		timer += GetFrameTime();
-		
+
 		if (timer > 0.10f) {
 			count++;
 			timer = 0;
 		}
-		
+
 		BeginDrawing();
-		
+
 		for (int i = 0; i < count; i++) {
 			DrawRectangle(rand() % (WINDOW_X - WIDTH) + 1, rand() % (WINDOW_Y - HEIGHT) + 1, WIDTH, HEIGHT, color);
 			change_color();
 		}
-		
+
 		EndDrawing();
 	}
 
