@@ -1,5 +1,5 @@
 #include <iostream>
-<<<<<<< HEAD
+
 #include <ctype.h>
 
 int main() {
@@ -19,7 +19,7 @@ int main() {
     }
     
     std::cout << name << std::endl;
-=======
+
 
 #define NEWLINE "\n"
 #define NOTHING ""
@@ -46,7 +46,7 @@ int main() {
         
     }
     
->>>>>>> b5444e74e1b6d1012c6f63ae0b51db8b3e5e29ab
+
     
     return 0;
 }

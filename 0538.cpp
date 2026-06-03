@@ -1,5 +1,5 @@
 #include <iostream>
-<<<<<<< HEAD
+
 
 int main() {
     std::string name;
@@ -17,7 +17,7 @@ int main() {
     
     std::cout << name << std::endl;
     
-=======
+
 #include <termios.h>
 #include <unistd.h>
 #include <ctype.h>
@@ -62,6 +62,6 @@ int main() {
     
     clear_screen();
     std::cout << "\033[?25l";
->>>>>>> b5444e74e1b6d1012c6f63ae0b51db8b3e5e29ab
+
     return 0;
 }
