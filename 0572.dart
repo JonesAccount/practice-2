@@ -11,6 +11,4 @@ void main() {
     for (var student in students.keys) {
         print("$student: ${students[student]}");
     }
-
-    int ch = 0; ch = stdin.readByteSync();
 }
