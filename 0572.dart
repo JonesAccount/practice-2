@@ -1,5 +1,3 @@
-import 'dart:io';
-
 void main() {
     var students = {"Alice":   "Genius",
                     "Bob":     "Smart",
